@@ -15,8 +15,6 @@ This repository contains the quality control (QC) evaluation pipelines for DNA s
   - [Requirements](#requirements-1)
   - [Usage](#usage-1)
 - [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
 
 ## Introduction
 
@@ -45,6 +43,20 @@ The raw vcf can be
 
 # Step 2: Generate QC report with dnaseqc
 <command to run dnaseqc>
+```
+## DNA Methylation Data QC Pipeline
+The DNA Methylation Data QC Pipeline begins with processed methylation sequencing data to generate quality control reports.
+
+### Usage
+
+```R
+<command to generate QC report>
+```
+
+## Contributing
+We welcome contributions to improve the QC pipelines. Please feel free to fork the repository, make changes, and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
+
+
 
 
 
