@@ -27,17 +27,24 @@ This project focuses on the quality control of DNA and DNA methylation sequencin
 The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to analyze and transform the data format, followed by dnaseqc to generate quality control reports.
 
 ### Requirements
-
 - hap.py
 - VBT
 - dnaseqc
+### installation
+(https://github.com/Illumina/hap.py) 
+
 
 ### Usage
+The raw vcf can be 
 
 ```bash
 # Step 1: Analyze and transform data format with hap.py and VBT
 <command to run hap.py>
+
 <command to run VBT>
 
 # Step 2: Generate QC report with dnaseqc
 <command to run dnaseqc>
+
+
+
