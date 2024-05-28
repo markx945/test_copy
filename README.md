@@ -10,9 +10,9 @@ This repository contains the quality control (QC) evaluation pipelines for DNA s
 - [Introduction](#introduction)
 - [DNA Data QC Pipeline](#dna-data-qc-pipeline)
   - [Requirements](#requirements)
-  - [Installation]
-  - [Variant calling QC](#Variant_calling_QC)
-  - [Generate QC report with dnaseqc]
+  - [Installation](#installation)
+  - [Variant calling QC](#Variant-calling-QC)
+  - [Generate QC report with dnaseqc](#Generate-QC-report-with-dnaseqc)
 - [Contributing](#contributing)
 
 ## Introduction
