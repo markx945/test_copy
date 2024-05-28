@@ -43,7 +43,7 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 ### truth.vcf为Quartet标准数据集，confident.bed为高置信区间，reference.fa为参考基因组文件
 hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
 
-### 得到的输出文件为
+### 得到的输出文件为；调整文件格式
 
 <command to run hap.py>
 
@@ -63,16 +63,31 @@ bash vbt.sh
 ## 运行merge_two_family_with_genotype.py脚本
 python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${family_name}.D6.txt -genotype ${family_name}.consensus.txt -family {family_name}
 ## 输出${family_name}.summary.txt文件
-
+```
 
 # Step 2: Generate QC report with dnaseqc
 ```R
 ##下载并安装R包dnaseqc
 
+## 读取F1_score计算和孟德尔遗传率计算结果，以历史数据为例
+variant_qc <- system.file("example","variants.calling.qc.txt",package = "dnaseqc")
+mendelian_qc <- system.file("example","EATRISPLUS_UU.summary.txt",package = "dnaseqc")
+
+## 输入测序类型，“WGS”或“WES”，计算得到DNAseq QC指标
+result = dnaseqc(variant_qc_file = variant_qc, mendelian_qc_file = mendelian_qc, data_type = "WGS")
+
+## 生成报告
+### 从R包中读取报告模板路径
+doc_path <- system.file("extdata","Quartet_temp.docx",package = "dnaseqc")
+### 指定路径生成DNAseq
+GenerateDNAReport(DNA_result = result,doc_file_path = doc_path,output_path = './DNAseq/' )
 
 ```
+| Family  | Total_Variants | Mendelian_Concordant_Variants | Mendelian_Concordance_Rate |
+| :---: | :--: | :------: | :------:|
+| EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979 ｜
+| EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691 ｜
 
-```
 ## DNA Methylation Data QC Pipeline
 The DNA Methylation Data QC Pipeline begins with processed methylation sequencing data to generate quality control reports.
 
