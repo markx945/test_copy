@@ -1,5 +1,5 @@
 # Dnaseqc
-Guideline for Quartet DNA and Methylation QC Pipeline
+Guideline for Quartet DNA QC Pipeline
 
 # Quartet DNA Quality Control Evaluation
 
@@ -13,7 +13,6 @@ This repository contains the quality control (QC) evaluation pipelines for DNA s
   - [Installation](#installation)
   - [Variant calling QC](#Variant-calling-QC)
   - [Generate QC report with dnaseqc](#Generate-QC-report-with-dnaseqc)
-- [Contributing](#contributing)
 
 ## Introduction
 
