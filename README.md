@@ -97,7 +97,7 @@ library(devtools)
 devtools::install_github("markx945/Dnaseqc/dnaseqc")
 library(dnaseqc)
 
-## 读取F1_score计算和孟德尔遗传率计算结果，以历史数据为例
+## 读取F1_score计算和孟德尔遗传率计算结果，以历史数据为例；实际计算时替换为上述variants.calling.qc.txt和${family_name}.summary.txt文件路径
 variant_qc <- system.file("example","variants.calling.qc.txt",package = "dnaseqc")
 mendelian_qc <- system.file("example","EATRISPLUS_UU.summary.txt",package = "dnaseqc")
 
