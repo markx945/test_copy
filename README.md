@@ -73,14 +73,15 @@ rtg vcfmerge --force-merge-all -o ${project}.family.vcf.gz ${D5_vcf} ${D6_vcf} $
 ## unzip the file for vbt input
 gunzip ${project}.family.vcf.gz
 
-## Run bvt.sh , output ${family_name}.D5.txt、${family_name}.D6.txt and ${family_name}.consensus.txt files
+## Run bvt.sh （The script needs to be modified according to the actual situation.）
+## output ${family_name}.D5.txt、${family_name}.D6.txt and ${family_name}.consensus.txt files
 bash vbt.sh
 
 ## Run merge_two_family_with_genotype.py to get mendelian result
 python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${family_name}.D6.txt -genotype ${family_name}.consensus.txt -family {family_name}
 
-
 ```
+
 #### output file
 
 1.variants.calling.qc.txt文件示例
@@ -118,7 +119,9 @@ doc_path <- system.file("extdata","Quartet_temp.docx",package = "dnaseqc")
 GenerateDNAReport(DNA_result = result,doc_file_path = doc_path,output_path = './DNAseq/' )
 
 ```
-
+#### output file
+Quartet_DNA_report.docx
+[Quartet_DNA_report.docx](https://github.com/markx945/Dnaseqc/files/15468110/Quartet_DNA_report.docx)
 
 
 
