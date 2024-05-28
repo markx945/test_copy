@@ -27,35 +27,44 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 - hap.py
 - VBT
 - dnaseqc
+- multiqc
+- rtgtools
 ### installation
 - hap.py
 (https://github.com/Illumina/hap.py)
 - VBT
 (https://github.com/sbg/VBT-TrioAnalysis)
-- rtg-tools 下载地址
+- rtg-tools
 （https://github.com/RealTimeGenomics/rtg-tools）
-- Chinese Quartet 标准数据集下载地址
+- Chinese Quartet
 （https://chinese-quartet.org/#/reference-datasets/download）
 
 ### Variant calling QC
 ![image](https://github.com/markx945/Dnaseqc/assets/91772929/54c984fa-e915-444f-ac6d-c7f3087d7f34)
 
-
 #### Performance assessment based on benchmark sets
+Variants were compared with benchmark calls in benchmark regions.
+We recommend that you input the four samples D5, D6, F7, and M8 from the same batch at one time.
+
 ```bash
-## 利用标准数据集计算F1 score
-### truth.vcf为Quartet标准数据集，confident.bed为高置信区间，reference.fa为参考基因组文件
+### truth.vcf is the Quartet reference vcf, confident.bed represents the high-confidence interval, and reference.fa is reference genome
 hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
 
-### wes数据需要先与探针取交集
+### WES data needs to be intersected with probes bed file first.
 samtools intersect -a target.bed -b reference_dataset.bed > intersect.bed
 hap.py truth.vcf query.vcf -f intersect.bed -o output_prefix -r reference.fa
 
-### 得到的输出文件.summary.csv文件
+### the output files are end with summary.csv
 
 ## Use MultiQC to integrate the D5, D6, F7, and M8, hap calculation results from the same batch
 multiqc ./dir_to_four_summary_csv_file
+
+## data integration scripts are in the extract_hap_result.ipynb file
+## final output is variants.calling.qc.txt file
 ```
+
+#### Performance assessment based on Quartet genetic built-in truth
+We splited the Quartet family to two trios (F7, M8, D5 and F7, M8, D6) and then do the Mendelian analysis. A Quartet Mendelian concordant variant is the same between the twins (D5 and D6) , and follow the Mendelian concordant between parents (F7 and M8). Mendelian concordance rate is the Mendelian concordance variant divided by total detected variants in a Quartet family. Only variants on chr1-22,X are included in this analysis.
 
 ```bash
 ## Use rtgtools to merge the D5, D6, F7, and M8 files from the same batch for subsequent calculation of Mendelian heritability
@@ -72,7 +81,7 @@ python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${fam
 
 
 ```
-#### output Fromat
+#### output file
 
 1.variants.calling.qc.txt文件示例
 | Sample  | SNV number | INDEL number | SNV precision | INDEL precision | SNV recall | INDEL recall |
@@ -87,7 +96,8 @@ python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${fam
 | EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691|
 
 
-#### Generate QC report with dnaseqc
+### Generate QC report with dnaseqc
+Reminder: Analysis of the first two steps must be completed before generating the DNA QC report.
 ```R
 ## download and install dnaseqc
 library(devtools)
