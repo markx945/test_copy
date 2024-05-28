@@ -54,9 +54,10 @@ hap.py truth.vcf query.vcf -f intersect.bed -o output_prefix -r reference.fa
 ### 得到的输出文件.summary.csv文件
 
 ## 使用multiqc整合同一批次D5、D6、F7和M8，hap计算结果
-multiqc ./dir_to_four_summary_csv_file 
-## 文件格式修改参考 extract_hap_result.ipynb文件，输出variants.calling.qc.txt文件
+multiqc ./dir_to_four_summary_csv_file
 ```
+## 文件格式修改参考 extract_hap_result.ipynb文件，输出variants.calling.qc.txt文件
+
 ### variants.calling.qc.txt文件示例
 | Sample  | SNV number | INDEL number | SNV precision | INDEL precision | SNV recall | INDEL recall |
 | :---: | :--: | :------: | :------:|  :------:|  :------:|  :------:|
