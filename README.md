@@ -10,10 +10,8 @@ This repository contains the quality control (QC) evaluation pipelines for DNA s
 - [Introduction](#introduction)
 - [DNA Data QC Pipeline](#dna-data-qc-pipeline)
   - [Requirements](#requirements)
-  - [Usage](#usage)
-- [DNA Methylation Data QC Pipeline](#dna-methylation-data-qc-pipeline)
-  - [Requirements](#requirements-1)
-  - [Usage](#usage-1)
+  - [Variant calling QC](#Variant_calling_QC)
+  - []
 - [Contributing](#contributing)
 
 ## Introduction
@@ -38,7 +36,9 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 - Chinese Quartet 标准数据集下载地址
 （https://chinese-quartet.org/#/reference-datasets/download）
 
-### Usage
+### Variant calling QC
+![image](https://github.com/markx945/Dnaseqc/assets/91772929/54c984fa-e915-444f-ac6d-c7f3087d7f34)
+
 
 ```bash
 # Step 1: Analyze and transform data format with hap.py and VBT
@@ -47,7 +47,6 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
 
 ### wes数据需要先与探针取交集
-### 推荐使用samtools 计算bed文件交集
 samtools intersect -a target.bed -b reference_dataset.bed > intersect.bed
 hap.py truth.vcf query.vcf -f intersect.bed -o output_prefix -r reference.fa
 
@@ -111,19 +110,6 @@ doc_path <- system.file("extdata","Quartet_temp.docx",package = "dnaseqc")
 GenerateDNAReport(DNA_result = result,doc_file_path = doc_path,output_path = './DNAseq/' )
 
 ```
-
-
-## DNA Methylation Data QC Pipeline
-The DNA Methylation Data QC Pipeline begins with processed methylation sequencing data to generate quality control reports.
-
-### Usage
-
-```R
-<command to generate QC report>
-```
-
-## Contributing
-We welcome contributions to improve the QC pipelines. Please feel free to fork the repository, make changes, and submit pull requests. For major changes, please open an issue first to discuss what you would like to change.
 
 
 
