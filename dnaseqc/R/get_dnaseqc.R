@@ -18,7 +18,7 @@
 #' @importFrom stats quantile
 
 
-dnaseqc <- function(variant_qc_file, mendelian_qc_file, data_type){
+Dnaseqc <- function(variant_qc_file, mendelian_qc_file, data_type){
   
   ## 检查数据形式
   
