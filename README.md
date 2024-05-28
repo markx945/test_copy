@@ -98,7 +98,7 @@ variant_qc <- system.file("example","variants.calling.qc.txt",package = "dnaseqc
 mendelian_qc <- system.file("example","EATRISPLUS_UU.summary.txt",package = "dnaseqc")
 
 ## 输入测序类型，“WGS”或“WES”，计算得到DNAseq QC指标
-result = dnaseqc(variant_qc_file = variant_qc, mendelian_qc_file = mendelian_qc, data_type = "WGS")
+result = Dnaseqc(variant_qc_file = variant_qc, mendelian_qc_file = mendelian_qc, data_type = "WGS")
 
 ## 生成报告
 ### 从R包中读取报告模板路径
