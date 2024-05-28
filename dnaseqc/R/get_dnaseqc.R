@@ -1,4 +1,4 @@
-#' Get query data and calculate score for 
+#' Get query data and calculate score for generating DNA QC report
 #' @export
 #' @importFrom data.table fread
 #' @importFrom dplyr mutate 
