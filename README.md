@@ -63,7 +63,13 @@ bash vbt.sh
 ## 运行merge_two_family_with_genotype.py脚本
 python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${family_name}.D6.txt -genotype ${family_name}.consensus.txt -family {family_name}
 ## 输出${family_name}.summary.txt文件
+
 ```
+### 输出${family_name}.summary.txt文件示例
+| Family  | Total_Variants | Mendelian_Concordant_Variants | Mendelian_Concordance_Rate |
+| :---: | :--: | :------: | :------:|
+| EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979|
+| EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691|
 
 # Step 2: Generate QC report with dnaseqc
 ```R
@@ -85,8 +91,8 @@ GenerateDNAReport(DNA_result = result,doc_file_path = doc_path,output_path = './
 ```
 | Family  | Total_Variants | Mendelian_Concordant_Variants | Mendelian_Concordance_Rate |
 | :---: | :--: | :------: | :------:|
-| EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979 ｜
-| EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691 ｜
+| EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979|
+| EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691|
 
 ## DNA Methylation Data QC Pipeline
 The DNA Methylation Data QC Pipeline begins with processed methylation sequencing data to generate quality control reports.
