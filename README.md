@@ -29,20 +29,49 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 - VBT
 - dnaseqc
 ### installation
-(https://github.com/Illumina/hap.py) 
+- hap.py
+(https://github.com/Illumina/hap.py)
+- VBT
+(https://github.com/sbg/VBT-TrioAnalysis)
 
 
 ### Usage
-The raw vcf can be 
 
 ```bash
 # Step 1: Analyze and transform data format with hap.py and VBT
+## 利用标准数据集计算F1 score
+### truth.vcf为Quartet标准数据集，confident.bed为高置信区间，reference.fa为参考基因组文件
+hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
+
+### 得到的输出文件为
+
 <command to run hap.py>
 
-<command to run VBT>
+## 计算孟德尔遗传率
+
+## 利用rtgtools 合并同一批次的D5、D6、F7、M8文件，用于后续计算孟德尔遗传率
+rtg vcfmerge --force-merge-all -o ${project}.family.vcf.gz ${D5_vcf} ${D6_vcf} ${F7_vcf} ${M8_vcf}
+##示例
+## /Volumes/移动硬盘/FD/software/rtg-tools/rtg-tools-3.12.1/rtg vcfmerge --force-merge-all -o Quartet_DNA_ILM_Nova_WUX_1.family.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL5_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL6_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL7_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL8_1_20171024_RAW.vcf.gz
+## 解压缩，用于vbt输入
+gunzip ${project}.family.vcf.gz
+
+## 运行vbt.sh脚本（测试使用，可根据具体需求进行修改）
+bash vbt.sh
+## 输出 ${family_name}.D5.txt、${family_name}.D6.txt和${family_name}.consensus.txt 三个文件
+
+## 运行merge_two_family_with_genotype.py脚本
+python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${family_name}.D6.txt -genotype ${family_name}.consensus.txt -family {family_name}
+## 输出${family_name}.summary.txt文件
+
 
 # Step 2: Generate QC report with dnaseqc
-<command to run dnaseqc>
+```R
+##下载并安装R包dnaseqc
+
+
+```
+
 ```
 ## DNA Methylation Data QC Pipeline
 The DNA Methylation Data QC Pipeline begins with processed methylation sequencing data to generate quality control reports.
