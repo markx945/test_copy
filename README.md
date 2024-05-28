@@ -10,8 +10,9 @@ This repository contains the quality control (QC) evaluation pipelines for DNA s
 - [Introduction](#introduction)
 - [DNA Data QC Pipeline](#dna-data-qc-pipeline)
   - [Requirements](#requirements)
+  - [Installation]
   - [Variant calling QC](#Variant_calling_QC)
-  - []
+  - [Generate QC report with dnaseqc]
 - [Contributing](#contributing)
 
 ## Introduction
@@ -40,8 +41,8 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 ![image](https://github.com/markx945/Dnaseqc/assets/91772929/54c984fa-e915-444f-ac6d-c7f3087d7f34)
 
 
+#### Performance assessment based on benchmark sets
 ```bash
-# Step 1: Analyze and transform data format with hap.py and VBT
 ## 利用标准数据集计算F1 score
 ### truth.vcf为Quartet标准数据集，confident.bed为高置信区间，reference.fa为参考基因组文件
 hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
@@ -52,61 +53,58 @@ hap.py truth.vcf query.vcf -f intersect.bed -o output_prefix -r reference.fa
 
 ### 得到的输出文件.summary.csv文件
 
-## 使用multiqc整合同一批次D5、D6、F7和M8，hap计算结果
+## Use MultiQC to integrate the D5, D6, F7, and M8, hap calculation results from the same batch
 multiqc ./dir_to_four_summary_csv_file
 ```
-## 文件格式修改参考 extract_hap_result.ipynb文件，输出variants.calling.qc.txt文件
 
-### variants.calling.qc.txt文件示例
+```bash
+## Use rtgtools to merge the D5, D6, F7, and M8 files from the same batch for subsequent calculation of Mendelian heritability
+rtg vcfmerge --force-merge-all -o ${project}.family.vcf.gz ${D5_vcf} ${D6_vcf} ${F7_vcf} ${M8_vcf}
+
+## unzip the file for vbt input
+gunzip ${project}.family.vcf.gz
+
+## Run bvt.sh , output ${family_name}.D5.txt、${family_name}.D6.txt and ${family_name}.consensus.txt files
+bash vbt.sh
+
+## Run merge_two_family_with_genotype.py to get mendelian result
+python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${family_name}.D6.txt -genotype ${family_name}.consensus.txt -family {family_name}
+
+
+```
+#### output Fromat
+
+1.variants.calling.qc.txt文件示例
 | Sample  | SNV number | INDEL number | SNV precision | INDEL precision | SNV recall | INDEL recall |
 | :---: | :--: | :------: | :------:|  :------:|  :------:|  :------:|
 | LCL5_UU_Illumina_D5_20230629_20171028_EATRISPLUS_UU_LCL5_hc  |  3855821  | 980430  | 99.73| 98.44 | 99.25 | 98.59 |
 | LCL6_UU_Illumina_D6_20230629_20171028_EATRISPLUS_UU_LCL6_hc  |  3861023  | 976804  | 99.74| 98.51 | 99.38 | 98.68 |
 
-```bash
-## 计算孟德尔遗传率，需要先安装VBT
-
-## 利用rtgtools 合并同一批次的D5、D6、F7、M8文件，用于后续计算孟德尔遗传率
-rtg vcfmerge --force-merge-all -o ${project}.family.vcf.gz ${D5_vcf} ${D6_vcf} ${F7_vcf} ${M8_vcf}
-### 示例
-## /Volumes/移动硬盘/FD/software/rtg-tools/rtg-tools-3.12.1/rtg vcfmerge --force-merge-all -o Quartet_DNA_ILM_Nova_WUX_1.family.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL5_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL6_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL7_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL8_1_20171024_RAW.vcf.gz
-## 解压缩，用于vbt输入
-gunzip ${project}.family.vcf.gz
-
-## 运行vbt.sh脚本（测试使用，可根据具体需求进行修改）
-bash vbt.sh
-## 输出 ${family_name}.D5.txt、${family_name}.D6.txt和${family_name}.consensus.txt 三个文件
-
-## 运行merge_two_family_with_genotype.py脚本
-python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${family_name}.D6.txt -genotype ${family_name}.consensus.txt -family {family_name}
-## 输出${family_name}.summary.txt文件
-
-```
-### 输出${family_name}.summary.txt文件示例
+2. ${family_name}.summary.txt
 | Family  | Total_Variants | Mendelian_Concordant_Variants | Mendelian_Concordance_Rate |
 | :---: | :--: | :------: | :------:|
 | EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979|
 | EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691|
 
 
-# Step 2: Generate QC report with dnaseqc
+#### Generate QC report with dnaseqc
 ```R
-##下载并安装R包dnaseqc和相关依赖
+## download and install dnaseqc
 library(devtools)
 devtools::install_github("markx945/Dnaseqc/dnaseqc")
 library(dnaseqc)
 
-## 读取F1_score计算和孟德尔遗传率计算结果，以历史数据为例；实际计算时替换为上述variants.calling.qc.txt和${family_name}.summary.txt文件路径
+## Read the F1 score calculation and Mendelian heritability calculation results
 variant_qc <- system.file("example","variants.calling.qc.txt",package = "dnaseqc")
 mendelian_qc <- system.file("example","EATRISPLUS_UU.summary.txt",package = "dnaseqc")
 
-## 输入测序类型，“WGS”或“WES”，计算得到DNAseq QC指标
+## Enter the sequencing type, "WGS" or "WES", to calculate the DNAseq QC metrics.
 result = Dnaseqc(variant_qc_file = variant_qc, mendelian_qc_file = mendelian_qc, data_type = "WGS")
 
-## 生成报告
-### 从R包中读取报告模板路径
+## Generate report 
+### read report template from R packages
 doc_path <- system.file("extdata","Quartet_temp.docx",package = "dnaseqc")
-### 指定路径生成DNAseq
+### generate QC report
 GenerateDNAReport(DNA_result = result,doc_file_path = doc_path,output_path = './DNAseq/' )
 
 ```
