@@ -91,7 +91,10 @@ python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${fam
 
 # Step 2: Generate QC report with dnaseqc
 ```R
-##下载并安装R包dnaseqc
+##下载并安装R包dnaseqc和相关依赖
+library(devtools)
+devtools::install_github("markx945/Dnaseqc/dnaseqc")
+library(dnaseqc)
 
 ## 读取F1_score计算和孟德尔遗传率计算结果，以历史数据为例
 variant_qc <- system.file("example","variants.calling.qc.txt",package = "dnaseqc")
