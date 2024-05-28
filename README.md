@@ -91,6 +91,7 @@ python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${fam
 | LCL6_UU_Illumina_D6_20230629_20171028_EATRISPLUS_UU_LCL6_hc  |  3861023  | 976804  | 99.74| 98.51 | 99.38 | 98.68 |
 
 2. ${family_name}.summary.txt
+
 | Family  | Total_Variants | Mendelian_Concordant_Variants | Mendelian_Concordance_Rate |
 | :---: | :--: | :------: | :------:|
 | EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979|
