@@ -33,7 +33,10 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 (https://github.com/Illumina/hap.py)
 - VBT
 (https://github.com/sbg/VBT-TrioAnalysis)
-
+- rtg-tools 下载地址
+（https://github.com/RealTimeGenomics/rtg-tools）
+- Chinese Quartet 标准数据集下载地址
+（https://chinese-quartet.org/#/reference-datasets/download）
 
 ### Usage
 
@@ -43,15 +46,29 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 ### truth.vcf为Quartet标准数据集，confident.bed为高置信区间，reference.fa为参考基因组文件
 hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
 
-### 得到的输出文件为；调整文件格式
+### wes数据需要先与探针取交集
+### 推荐使用samtools 计算bed文件交集
+samtools intersect -a target.bed -b reference_dataset.bed > intersect.bed
+hap.py truth.vcf query.vcf -f intersect.bed -o output_prefix -r reference.fa
 
-<command to run hap.py>
+### 得到的输出文件.summary.csv文件
 
-## 计算孟德尔遗传率
+## 使用multiqc整合同一家系的hap计算结果
+multiqc ./dir_to_four_summary_csv_file 
+## 文件格式修改参考 extract_hap_result.ipynb文件，输出variants.calling.qc.txt文件
+```
+### variants.calling.qc.txt文件示例
+| Sample  | SNV number | INDEL number | SNV precision | INDEL precision | SNV recall | INDEL recall |
+| :---: | :--: | :------: | :------:|  :------:|  :------:|  :------:|
+| LCL5_UU_Illumina_D5_20230629_20171028_EATRISPLUS_UU_LCL5_hc  |  3855821  | 980430  | 99.73| 98.44 | 99.25 | 98.59 |
+| LCL6_UU_Illumina_D6_20230629_20171028_EATRISPLUS_UU_LCL6_hc  |  3861023  | 976804  | 99.74| 98.51 | 99.38 | 98.68 |
+
+```bash
+## 计算孟德尔遗传率，需要先安装VBT
 
 ## 利用rtgtools 合并同一批次的D5、D6、F7、M8文件，用于后续计算孟德尔遗传率
 rtg vcfmerge --force-merge-all -o ${project}.family.vcf.gz ${D5_vcf} ${D6_vcf} ${F7_vcf} ${M8_vcf}
-##示例
+### 示例
 ## /Volumes/移动硬盘/FD/software/rtg-tools/rtg-tools-3.12.1/rtg vcfmerge --force-merge-all -o Quartet_DNA_ILM_Nova_WUX_1.family.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL5_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL6_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL7_1_20171024_RAW.vcf.gz Quartet_DNA_ILM_Nova_WUX_LCL8_1_20171024_RAW.vcf.gz
 ## 解压缩，用于vbt输入
 gunzip ${project}.family.vcf.gz
@@ -71,6 +88,7 @@ python merge_two_family_with_genotype.py -LCL5 ${family_name}.D5.txt -LCL6 ${fam
 | EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979|
 | EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691|
 
+
 # Step 2: Generate QC report with dnaseqc
 ```R
 ##下载并安装R包dnaseqc
@@ -89,10 +107,7 @@ doc_path <- system.file("extdata","Quartet_temp.docx",package = "dnaseqc")
 GenerateDNAReport(DNA_result = result,doc_file_path = doc_path,output_path = './DNAseq/' )
 
 ```
-| Family  | Total_Variants | Mendelian_Concordant_Variants | Mendelian_Concordance_Rate |
-| :---: | :--: | :------: | :------:|
-| EATRISPLUS_UU.INDEL  |  1294054  | 1178598  | 0.910779611979|
-| EATRISPLUS_UU.SNV  |  5034285  | 4868250   | 0.967019149691|
+
 
 ## DNA Methylation Data QC Pipeline
 The DNA Methylation Data QC Pipeline begins with processed methylation sequencing data to generate quality control reports.
