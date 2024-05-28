@@ -1,5 +1,5 @@
 #' Get query data and calculate score for 
-#' 
+#' @export
 #' @importFrom data.table fread
 #' @importFrom dplyr mutate 
 #' @importFrom dplyr across 
