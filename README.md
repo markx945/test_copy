@@ -45,6 +45,7 @@ The DNA Data QC Pipeline starts with VCF files, using hap.py and VBT software to
 Variants were compared with benchmark calls in benchmark regions.
 We recommend that you input the four samples D5, D6, F7, and M8 from the same batch at one time.
 
+The naming rules for VCF files should ideally follow the format {batch_name} + LCL5/6/7/8.
 ```bash
 ### truth.vcf is the Quartet reference vcf, confident.bed represents the high-confidence interval, and reference.fa is reference genome
 hap.py truth.vcf query.vcf -f confident.bed -o output_prefix -r reference.fa
