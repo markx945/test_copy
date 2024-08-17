@@ -39,7 +39,13 @@ Dnaseqc <- function(variant_qc_file, mendelian_qc_file, data_type){
   ### 处理variant_qc数据
   variant_qc_dt <- variant_qc_dt %>%
     mutate(across(c(`SNV precision`, `INDEL precision`, `SNV recall`, `INDEL recall`), 
-                  ~round(.x / 100, 4)))
+                  ~round(.x / 100, 3)))
+  
+  ### 处理mendelian_qc数据，保留三位小数
+  mendelian_qc_dt <- mendelian_qc_dt %>%
+    mutate(across(c(`Mendelian_Concordance_Rate`), 
+                  ~round(.x, 3)))
+  
   ## 添加query数据名称
   one_set <- c('Queried_Data_Set', 'Queried', 'Queried_Data')
   
@@ -65,12 +71,13 @@ Dnaseqc <- function(variant_qc_file, mendelian_qc_file, data_type){
   # 添加metrics值到one_set
   one_set <- c(one_set, metrics$Value)
   # 定义列名
-  column_names <- c('sample', 'group', 'batch', 'snv_D5-precision', 'snv_D5-recall', 'snv_D6-precision', 'snv_D6-recall', 'snv_F7-precision', 'snv_F7-recall', 'snv_M8-precision', 'snv_M8-recall', 'indel_D5-precision', 'indel_D5-recall', 'indel_D6-precision', 'indel_D6-recall', 'indel_F7-precision', 'indel_F7-recall', 'indel_M8-precision', 'indel_M8-recall')
+  # column_names <- c('sample', 'group', 'batch', 'snv_D5-precision', 'snv_D5-recall', 'snv_D6-precision', 'snv_D6-recall', 'snv_F7-precision', 'snv_F7-recall', 'snv_M8-precision', 'snv_M8-recall', 'indel_D5-precision', 'indel_D5-recall', 'indel_D6-precision', 'indel_D6-recall', 'indel_F7-precision', 'indel_F7-recall', 'indel_M8-precision', 'indel_M8-recall')
+  column_names <- c('sample', 'group', 'batch', 'indel_D5-precision','indel_D5-recall','snv_D5-precision', 'snv_D5-recall', 'indel_D6-precision', 'indel_D6-recall','snv_D6-precision', 'snv_D6-recall', 'indel_F7-precision', 'indel_F7-recall','snv_F7-precision', 'snv_F7-recall', 'indel_M8-precision', 'indel_M8-recall','snv_M8-precision', 'snv_M8-recall')
   variant_metric_df <- data.frame(t(one_set))
   names(variant_metric_df) <- column_names
   
   # 初始化列表
-  one_set <- c("Queried_Data_Set", "Queried", "Queried_Data") 
+  one_set <- c("Queried_Data_Set", "Queried", "Queried_Data")
   
   ## 计算孟德尔遗传率平均值
   snv_mendelian <- mendelian_qc_dt %>% 
@@ -123,7 +130,8 @@ Dnaseqc <- function(variant_qc_file, mendelian_qc_file, data_type){
     total <- (precision_beta + recall_beta + mendelian_beta) / 3
     
     # 添加到列表
-    quality_metrics_list[[length(quality_metrics_list) + 1]] <- list(bat, round(precision_snv, 5), round(precision_indel, 5), round(recall_snv, 5), round(recall_indel, 5), round(mendelian_snv, 5), round(mendelian_indel, 5), round(total, 5))
+    ## 保留三位小数
+    quality_metrics_list[[length(quality_metrics_list) + 1]] <- list(bat, round(precision_snv, 3), round(precision_indel, 3), round(recall_snv, 3), round(recall_indel, 3), round(mendelian_snv, 3), round(mendelian_indel, 3), round(total, 3))
   }
   
   quality_metrics_df <- do.call(rbind, lapply(quality_metrics_list, function(x) as.data.frame(t(x), stringsAsFactors = FALSE)))
@@ -248,7 +256,7 @@ Dnaseqc <- function(variant_qc_file, mendelian_qc_file, data_type){
     Merge_data[Merge_data$batch == "Queried_Data","total_norm"] <- 10
   }
   
-  Merge_data
+  # Merge_data
   ## 获取评估结果
   # 初始化结果列表
   
