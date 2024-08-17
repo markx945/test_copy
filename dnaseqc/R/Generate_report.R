@@ -96,10 +96,14 @@ GenerateDNAReport <- function(DNA_result = NULL, doc_file_path = NULL, output_pa
   
   p_rank_scatter_plot <- ggplot(data = historical_rank) +
     # 添加四个区域
-    geom_rect(aes(xmin = 1, xmax = Q1, ymin = -Inf, ymax = Inf), fill = "#B80D0D", alpha = 0.08) +
-    geom_rect(aes(xmin = Q1, xmax = Q2, ymin = -Inf, ymax = Inf), fill = "#D97C11", alpha = 0.08) +
-    geom_rect(aes(xmin = Q2, xmax = Q3, ymin = -Inf, ymax = Inf), fill = "#70C404", alpha = 0.08) +
-    geom_rect(aes(xmin = Q3, xmax = 10, ymin = -Inf, ymax = Inf), fill = "#0F9115", alpha = 0.08) +
+    # geom_rect(aes(xmin = 1, xmax = Q1, ymin = -Inf, ymax = Inf), fill = "#B80D0D", alpha = 0.08) +
+    # geom_rect(aes(xmin = Q1, xmax = Q2, ymin = -Inf, ymax = Inf), fill = "#D97C11", alpha = 0.08) +
+    # geom_rect(aes(xmin = Q2, xmax = Q3, ymin = -Inf, ymax = Inf), fill = "#70C404", alpha = 0.08) +
+    # geom_rect(aes(xmin = Q3, xmax = 10, ymin = -Inf, ymax = Inf), fill = "#0F9115", alpha = 0.08) +
+    geom_rect(xmin = 1, xmax = Q1, ymin = -Inf, ymax = Inf, fill = "#B80D0D", alpha = 0.08) +
+    geom_rect(xmin = Q1, xmax = Q2, ymin = -Inf, ymax = Inf, fill = "#D97C11", alpha = 0.08) +
+    geom_rect(xmin = Q2, xmax = Q3, ymin = -Inf, ymax = Inf, fill = "#70C404", alpha = 0.08) +
+    geom_rect(xmin = Q3, xmax = 10, ymin = -Inf, ymax = Inf, fill = "#0F9115", alpha = 0.08) +
     # 添加基础点图层
     geom_point(aes(x = total_norm, y = reorder(batch, total_norm))) +
     # 突出显示 "QUERIED DATA" 对应的点
